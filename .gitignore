@@ -1,5 +1,7 @@
 dispatch.py
 main.py
 submission.zip
-src_to_implement/NeuralNetworkTest.py
+src_to_implement/NeuralNetworkTests.py
+src_to_implement/TrainLeNet.py
+Data/
 .idea
