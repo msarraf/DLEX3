@@ -10,7 +10,7 @@ class Flatten:
         self.feature_map_dim = 0
         self.flatten_output = 0
 
-    def forward(self,input_tensor):
+    def forward(self, input_tensor):
        self.input_tensor = input_tensor
        self.batch_size = self.input_tensor.shape[0]
        self.feature_map = self.input_tensor.shape[1]
