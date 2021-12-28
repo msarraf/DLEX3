@@ -1,5 +1,5 @@
 from copy import *
-from CNN.src_to_implement.Layers import Base
+from src_to_implement.Layers import Base
 from scipy import ndimage
 from scipy import signal
 import numpy as np
