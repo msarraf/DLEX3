@@ -1,6 +1,6 @@
 # from Base import BaseLayer
-from CNN.src_to_implement.Layers import Base
-from CNN.src_to_implement.Optimization import Optimizers
+from src_to_implement.Layers import Base
+from src_to_implement.Optimization import Optimizers
 import numpy as np
 
 
