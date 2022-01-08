@@ -17,10 +17,22 @@ class NeuralNetwork:
 
     def forward(self):
         self.input_tensor, self.label_tensor = self.data_layer.next()
+        reg_loss = 0
         for layer in self.layers:
+            # calculate regularization loss for each trainable layer
+            if self.optimizer.regularizer is not None:
+                if layer.trainable is True:
+                    if isinstance(layer, FullyConnected.FullyConnected):
+                        layer_weights = layer.weights
+                    else:
+                        layer_weights = layer.weights[:, :-1]
+                    reg_loss += layer.optimizer.regularizer.norm(layer_weights)
+            # ---------------------------------------------------------
             output_tensor = layer.forward(self.input_tensor)
             self.input_tensor = output_tensor
-        final_loss = self.loss_layer.forward(self.input_tensor, self.label_tensor)
+            # add regularization effect for the final loss calculation
+        prediction_tensor = self.input_tensor + reg_loss
+        final_loss = self.loss_layer.forward(prediction_tensor, self.label_tensor)
         self.loss.append(final_loss)
         return final_loss
 
@@ -37,14 +49,22 @@ class NeuralNetwork:
         self.layers.append(layer)
 
     def train(self, iterations):
+        self.phase = False
         for i in range(iterations):
             self.forward()
             self.backward()
-        print(self.label_tensor)
 
     def test(self, input_tensor):
+        self.phase = True
         for layer in self.layers:
             output_tensor = layer.forward(input_tensor)
             input_tensor = output_tensor
         return input_tensor
 
+    def set_phase(self, value):
+        for layer in self.layers:
+            layer.testing_phase = value
+
+    def get_phase(self):
+        pass
+    phase = property(get_phase, set_phase)

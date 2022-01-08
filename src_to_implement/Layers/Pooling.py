@@ -1,5 +1,5 @@
 import numpy as np
-from CNN.src_to_implement.Layers import Base
+from src_to_implement.Layers import Base
 
 
 class Pooling(Base.BaseLayer):
