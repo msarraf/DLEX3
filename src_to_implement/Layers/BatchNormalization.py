@@ -50,6 +50,7 @@ class BatchNormalization(Base.BaseLayer):
         # Test Phase --------------------------------
         else:
             if np.size(input_tensor.shape) > 2:
+                self.batch_size, self.channel_size, self.image_H, self.image_W = input_tensor.shape
                 reformat_image_tensor = self.reformat(input_tensor)
                 normed_input = (reformat_image_tensor - self.mean)/np.sqrt(self.var + self.epsilon)
                 normed_input = self.gamma * normed_input + self.beta
@@ -105,7 +106,7 @@ class BatchNormalization(Base.BaseLayer):
             self._gradient_weights = np.sum(reformat_error_tensor * self.normed_input, axis=0).reshape(1, error_tensor.shape[1])
             self._gradient_bias = np.sum(reformat_error_tensor, axis=0).reshape(1, error_tensor.shape[1])
             if self.weight_optimizer is not None:
-                self.gamma = self.weight_optimizer.calculate_update(self.gamma, self._gradiant_weights)
+                self.gamma = self.weight_optimizer.calculate_update(self.gamma, self._gradient_weights)
                 self.beta = self.bias_optimizer.calculate_update(self.beta, self._gradient_bias)
             return reformat_bp_error_tensor
             # fully connected layer
@@ -151,11 +152,15 @@ class BatchNormalization(Base.BaseLayer):
     gradient_bias = property(get_gradient_bias, set_gradient_bias)
 
     def get_optimizer(self):
-        pass
+        return self.weight_optimizer
 
     def set_optimizer(self, value):
         self.weight_optimizer = value
         self.bias_optimizer = copy.deepcopy(value)
 
     optimizer = property(get_optimizer, set_optimizer)
+
+    def initialize(self, weight_initializer, bias_initializer):
+        pass
+
 
