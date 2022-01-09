@@ -66,20 +66,20 @@ class Adam(Optimizer):
 
 
 class Sgd(Optimizer):
-    def __init__(self,learning_rate):
+    def __init__(self, learning_rate):
         super().__init__()
         # if not learning_rate.is_float():
         if not isinstance(learning_rate, float):
             if not isinstance(learning_rate, int):
                 raise TypeError("learning rate must be set to an float or int")
-        self.learning_rate = learning_rate
+        self.learning_rate = float(learning_rate)
 
     def calculate_update(self, weight_tensor, gradient_tensor):
         if self.regularizer is not None:
             regularization_loss = self.regularizer.calculate_gradient(weight_tensor)
         else:
             regularization_loss = 0
-        updated_weights = np.subtract(np.subtract(weight_tensor, self.learning_rate*regularization_loss), (np.multiply(self.learning_rate, gradient_tensor)))
+        updated_weights = np.subtract(np.subtract(weight_tensor, self.learning_rate*regularization_loss), np.multiply(self.learning_rate, gradient_tensor))
         return updated_weights
 
 
