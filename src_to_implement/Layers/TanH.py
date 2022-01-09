@@ -13,3 +13,8 @@ class TanH(Base.BaseLayer):
 
     def backward(self, error_tensor):
         return (1 - self.out_TanH ** 2) * error_tensor
+
+    def set_out_tanh(self, value):
+        self.out_TanH = value
+
+
