@@ -47,3 +47,18 @@ class FullyConnected(Base.BaseLayer):
                                            bias_initializer.fan_out)
         self.weights = np.append(weights, bias, 0)
 
+    def get_weights(self):
+        return self.weights
+
+    def set_weights(self, value):
+        self.weights = value
+
+    def get_gradient_weights(self):
+        return self.gradient_weights
+
+    def get_input_tensor(self):
+        return self.input_tensor
+
+    def set_input_tensor(self, value):
+        self.input_tensor = value
+
