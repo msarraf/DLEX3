@@ -19,7 +19,7 @@ class RNN(Base.BaseLayer):
         self.fully_connected_states_tanh = None
         self.gradient_weights_fc_state = None
         self.fullyConnected_input_tensor = None
-        self.optimizer = None
+        self._optimizer = None
         self.tanH = TanH.TanH()
         self.Sigmoid = Sigmoid.Sigmoid()
         self.fullyConnected_output = FullyConnected.FullyConnected(hidden_size, output_size)
@@ -64,9 +64,9 @@ class RNN(Base.BaseLayer):
             bp_tensor_tanh_befor = bp_states_and_input[0, 0:self.hidden_size]
             bp_output[batch, :] = bp_states_and_input[0, self.hidden_size:]
             self.gradient_weights_fc_state += self.fullyConnected_states.get_gradient_weights()
-        if self.optimizer is not None:
+        if self._optimizer is not None:
             weights_fullyconnected_states = self.fullyConnected_states.get_weights()
-            weights_fullyconnected_states = self.optimizer.calculate_update(weights_fullyconnected_states, self.gradient_weights_fc_state)
+            weights_fullyconnected_states = self._optimizer.calculate_update(weights_fullyconnected_states, self.gradient_weights_fc_state)
             self.fullyConnected_states.set_weights(weights_fullyconnected_states)
         return bp_output
 
@@ -99,10 +99,10 @@ class RNN(Base.BaseLayer):
     gradient_weights = property(get_gradient_weights, set_gradient_weights)
 
     def get_optimizer(self):
-        return self.optimizer
+        return self._optimizer
 
     def set_optimizer(self, value):
-        self.optimizer = copy.deepcopy(value)
+        self._optimizer = value
         self.fullyConnected_output.optimizer = copy.deepcopy(value)
 
-    Optimizers = property(get_optimizer, set_optimizer)
+    optimizer = property(get_optimizer, set_optimizer)
